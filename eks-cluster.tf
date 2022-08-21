@@ -7,6 +7,20 @@ module "eks" {
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
+  
+  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access  = false
+
+  cluster_security_group_additional_rules = {
+    limit_internet_443_access = {
+      description                = "Only my computer"
+      protocol                   = "tcp"
+      from_port                  = 443
+      to_port                    = 443
+      type                       = "ingress"
+      cidr_blocks                = ["5.102.204.68/32"]
+    }
+  }
 
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
